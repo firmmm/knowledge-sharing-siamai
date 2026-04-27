@@ -21,4 +21,4 @@ docker run --runtime nvidia --gpus all \
     --model mistralai/Mistral-7B-v0.1
 ```
 
-### for some specific command : [here]()
+for some specific command example : [here](inference_engine/vllm/run_vllm.sh)
