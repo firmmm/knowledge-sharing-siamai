@@ -1,0 +1,27 @@
+docker run -d \
+  --name qwen-3-32B-vllm-prod-firm \
+  --restart always \
+  --shm-size=200g \
+  --ipc=host \
+  --gpus all \
+  -p 8004:8000 \
+  -e CUDA_VISIBLE_DEVICES=0,1,2 \
+  -e HF_HOME=/hf_model \
+  -v /raid/hf_model:/hf_model \
+  vllm/vllm-openai:v0.10.2 \
+  --model Qwen/Qwen3-32B \
+  --host 0.0.0.0 \
+  --port 8000 \
+  --data-parallel-size 3 \
+  --tensor-parallel-size 1 \
+  --gpu-memory-utilization 0.9 \
+  --enable-chunked-prefill \
+  --enable-prefix-caching \
+  --max-seq-len-to-capture 65536 \
+  --max-num-batched-tokens 8192 \
+  --max-num-seqs 1024 \
+  --max-model-len 131072 \
+  --rope-scaling '{"rope_type":"yarn","factor":4.0,"original_max_position_embeddings":32768}' \
+  --trust-remote-code \
+  --dtype bfloat16 \
+  --api-key siamai-dev-qwen
