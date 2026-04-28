@@ -21,7 +21,7 @@ and run the training with:
 ```bash
 uv run torchrun --nproc-per-node=8 examples/llm_finetune/finetune.py -c /path/to/your/config.yaml
 ```
-[run_automod.sh](training_framework/nemo_automod/run_automod.sh)
+at [run_automod.sh](training_framework/nemo_automod/run_automod.sh)
 
 ## Configuration Explanation
 
