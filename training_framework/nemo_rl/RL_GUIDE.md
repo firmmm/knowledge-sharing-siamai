@@ -23,9 +23,9 @@ dpkg -l | grep cudnn.*cuda
 sudo apt-get update && sudo apt-get install libibverbs-dev
 ```
 ## Create config, processor and reward file
-- Config file at [config.yaml](training_framework/nemo_rl/config.yaml)
-- processor at [thai_data_processor.py](training_framework/nemo_rl/thai_data_processor.py)
-- reward at [thai_reward_env.py](training_framework/nemo_rl/thai_reward_env.py)
+- Config file at [config.yaml](https://github.com/firmmm/knowledge-sharing-siamai/blob/main/training_framework/nemo_rl/config.yaml)
+- processor at [thai_data_processor.py](https://github.com/firmmm/knowledge-sharing-siamai/blob/main/training_framework/nemo_rl/thai_data_processor.py)
+- reward at [thai_reward_env.py](https://github.com/firmmm/knowledge-sharing-siamai/blob/main/training_framework/nemo_rl/thai_reward_env.py)
 
 
 and run file with:
@@ -57,4 +57,4 @@ sys.argv = [
 runpy.run_path("examples/run_grpo.py", run_name="__main__")
 EOF
 ```
-at [run_rl.sh](training_framework/nemo_rl/run_rl.sh)
+at [run_rl.sh](https://github.com/firmmm/knowledge-sharing-siamai/blob/main/training_framework/nemo_rl/run_rl.sh)
