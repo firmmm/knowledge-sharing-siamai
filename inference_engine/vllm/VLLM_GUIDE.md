@@ -75,3 +75,4 @@ docker run -d \
   --tool-call-parser gemma4 \ #Uses Gemma4-specific parser for tool calls in custom format
   --async-scheduling #Enables asynchronous scheduling for improved throughput
 ```
+Ref : [vllm_serve_docs](https://docs.vllm.ai/en/v0.8.4/serving/openai_compatible_server.html#openai-compatible-server)
