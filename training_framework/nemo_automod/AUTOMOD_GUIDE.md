@@ -16,12 +16,12 @@ uv sync --locked --extra all --all-group
 Ref : [automod_set_env](https://github.com/NVIDIA-NeMo/Automodel?tab=contributing-ov-file#1-developing-with-automodel-container)
 
 ## Create config.yaml and run training
-Create config.yaml at [config.yaml](training_framework/nemo_automod/config.yaml)
+Create config.yaml at [config.yaml](https://github.com/firmmm/knowledge-sharing-siamai/blob/main/training_framework/nemo_automod/config.yaml)
 and run the training with:
 ```bash
 uv run torchrun --nproc-per-node=8 examples/llm_finetune/finetune.py -c /path/to/your/config.yaml
 ```
-at [run_automod.sh](training_framework/nemo_automod/run_automod.sh)
+at [run_automod.sh](https://github.com/firmmm/knowledge-sharing-siamai/blob/main/training_framework/nemo_automod/run_automod.sh)
 
 ## Configuration Explanation
 
