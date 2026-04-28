@@ -21,7 +21,7 @@ docker run --runtime nvidia --gpus all \
     --model google/gemma-4-26B-A4B-it
 ```
 
-for some specific command example : [here](inference_engine/vllm/run_vllm.sh)
+for some specific command example : [here](https://github.com/firmmm/knowledge-sharing-siamai/blob/main/inference_engine/vllm/run_vllm.sh)
 
 ## Docker Command Arguments Explanation
 
