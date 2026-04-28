@@ -1,16 +1,16 @@
 # usage : uv run torchrun --nproc-per-node=8 examples/llm_finetune/finetune.py -c /home/firm/training/conf/automod/qwen3_32b_squad.yaml
 
 step_scheduler:
-  global_batch_size: 32
+  global_batch_size: 64
   local_batch_size: 1
-  ckpt_every_steps: 50
-  val_every_steps: 50  # will run every x number of gradient steps
-  num_epochs: 5
-  # max_steps: 100 
+  ckpt_every_steps: 100
+  val_every_steps: 100
+  #max_steps: 20000
+  num_epochs: 3
 
 dist_env:
   backend: nccl
-  timeout_minutes: 1
+  timeout_minutes: 120
 
 rng:
   _target_: nemo_automodel.components.training.rng.StatefulRNG
@@ -21,68 +21,83 @@ model:
   _target_: nemo_automodel.NeMoAutoModelForCausalLM.from_pretrained
   pretrained_model_name_or_path: Qwen/Qwen3-32B
   torch_dtype: bf16
-  attn_implementation: "sdpa" # use SDPA instead of flash_attention_2 (default)
+  use_liger_kernel: true
+  #attn_implementation: eager
+
+  #qolra
+  # quantization_config:
+  #   _target_: transformers.BitsAndBytesConfig
+  #   load_in_4bit: true
+  #   # แก้จาก bf16 เป็น bfloat16 หรือระบุเป็น string แบบนี้
+  #   bnb_4bit_compute_dtype: bfloat16 
+  #   bnb_4bit_quant_type: "nf4"
+  #   bnb_4bit_use_double_quant: true
 
 checkpoint:
   enabled: true
-  checkpoint_dir: /home/firm/training/ckpts/automod-qwen32b-csld
+  checkpoint_dir: /home/firm/training/ckpts/run2_3
   model_save_format: safetensors # torch_save(use for training resumption, PEFT models) or safetensors(inference)
-  save_consolidated: true # true if want to use model quick (inference ,deploy , etc.)
+  save_consolidated: false # true if want to use model quick (inference ,deploy , etc.)
+  is_async: true
 
 distributed:
   _target_: nemo_automodel.components.distributed.fsdp2.FSDP2Manager
-  dp_size: none
+  dp_size: 8
   tp_size: 1
   cp_size: 1
   sequence_parallel: true
+  activation_checkpointing: true
 
 peft:  
   _target_: nemo_automodel.components._peft.lora.PeftConfig
   match_all_linear: True    # Apply LoRA to ALL linear layers  
-  dim: 8                    # Low-rank dimension (small = more memory savings)  
-  alpha: 32                 # Scaling factor  
+  dim: 64             # Low-rank dimension (small = more memory savings)  
+  alpha: 32              # scale = alpha / dim
   use_triton: True          # Use optimized Triton kernels
-
 
 loss_fn:
   _target_: nemo_automodel.components.loss.masked_ce.MaskedCrossEntropy
 
 dataset:
   _target_: nemo_automodel.components.datasets.llm.squad.make_squad_dataset
-  dataset_name: /home/firm/training/data/fintune-data/automodel/squad_data/split-data
+  dataset_name: /real-all-data/finetune-data/squad-data/spilt
   split: train
+  seq_length: 512 #fix (maybe)
+  #num_proc : 16 #num_proc for loading data, new one mabe not work 
 
 packed_sequence:
   # Set packed_sequence_size > 0 to run with packed sequences
-  packed_sequence_size: 0
+  packed_sequence_size: 32768 # maybe need to change a bigger for new data 
 
 dataloader:
   _target_: torchdata.stateful_dataloader.StatefulDataLoader
   collate_fn: nemo_automodel.components.datasets.utils.default_collater
   shuffle: true
 
-
 validation_dataset:
   _target_: nemo_automodel.components.datasets.llm.squad.make_squad_dataset
-  dataset_name: /home/firm/training/data/fintune-data/automodel/squad_data/split-data
+  dataset_name: /real-all-data/finetune-data/squad-data/spilt #data set
   split: validation
 
 validation_dataloader:
   _target_: torchdata.stateful_dataloader.StatefulDataLoader
   collate_fn: nemo_automodel.components.datasets.utils.default_collater
-
-test_dataset:  
-  _target_: nemo_automodel.components.datasets.llm.squad.make_squad_dataset  
-  dataset_name: /home/firm/training/data/fintune-data/automodel/squad_data/split-data
-  split: test
-
+  
 optimizer:
-  _target_: torch.optim.Adam
-  betas: [0.9, 0.999]
+  _target_: torch.optim.AdamW
+  betas: [0.9, 0.95]
   eps: 1e-8
-  lr: 5.0e-6
-  weight_decay: 0
+  lr: 5.0e-5
+  weight_decay: 0.1
   # min_lr: 1.0e-5
 
+clip_grad_norm:
+  max_norm: 1.0
+
+lr_scheduler:
+  lr_warmup_steps: 100
+  lr_decay_steps: 12000
+  lr_decay_style: cosine
+
 wandb:
-  project: qwen3_32b_squad_automod
+  project: qwen3_32b_ex_automod
