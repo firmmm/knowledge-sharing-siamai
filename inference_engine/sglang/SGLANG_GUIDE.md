@@ -29,7 +29,7 @@ docker run --gpus all \
         --host 0.0.0.0 \
         --port 30000
 ```
-for some specific command example : [here](inference_engine/sglang/run_sglang.sh)
+for some specific command example : [here](https://github.com/firmmm/knowledge-sharing-siamai/blob/main/inference_engine/sglang/run_sglang.sh)
 
 ## Docker Command Arguments Explanation
 ```bash
