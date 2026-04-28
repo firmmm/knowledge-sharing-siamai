@@ -29,7 +29,7 @@ This configuration file sets up distributed fine-tuning of a Qwen3-32B model usi
 
 ## Training Control
 
-**step_scheduler**: Controls the training loop timing and batch sizes [1](#0-0) 
+**step_scheduler**: Controls the training loop timing and batch sizes
 - `global_batch_size: 64` - Total batch size across all GPUs
 - `local_batch_size: 1` - Batch size per GPU (64 GPUs × 1 = 64 global)
 - `ckpt_every_steps: 100` - Save checkpoint every 100 training steps
@@ -38,7 +38,7 @@ This configuration file sets up distributed fine-tuning of a Qwen3-32B model usi
 
 ## Distributed Environment
 
-**dist_env**: Sets up distributed training backend [2](#0-1) 
+**dist_env**: Sets up distributed training backend
 - `backend: nccl` - Use NVIDIA's NCCL for GPU communication
 - `timeout_minutes: 120` - Timeout for distributed operations
 
@@ -69,7 +69,7 @@ This configuration file sets up distributed fine-tuning of a Qwen3-32B model usi
 
 ## Distributed Training Strategy
 
-**distributed**: FSDP2 configuration for large-scale training [3](#0-2) 
+**distributed**: FSDP2 configuration for large-scale training
 - `_target_: nemo_automodel.components.distributed.fsdp2.FSDP2Manager` - FSDP2 implementation
 - `dp_size: 8` - Data parallel size (8 GPUs)
 - `tp_size: 1` - Tensor parallel size (disabled)
@@ -79,7 +79,7 @@ This configuration file sets up distributed fine-tuning of a Qwen3-32B model usi
 
 ## Parameter-Efficient Fine-Tuning
 
-**peft**: LoRA configuration for memory-efficient training [4](#0-3) 
+**peft**: LoRA configuration for memory-efficient training
 - `_target_: nemo_automodel.components._peft.lora.PeftConfig` - LoRA config class
 - `match_all_linear: True` - Apply LoRA to all linear layers
 - `dim: 64` - Low-rank adapter dimension
@@ -93,7 +93,7 @@ This configuration file sets up distributed fine-tuning of a Qwen3-32B model usi
 
 ## Dataset Configuration
 
-**dataset**: Training data setup [5](#0-4) 
+**dataset**: Training data setup
 - `_target_: nemo_automodel.components.datasets.llm.squad.make_squad_dataset` - SQuAD dataset loader
 - `dataset_name: /real-all-data/finetune-data/squad-data/spilt` - Local dataset path
 - `split: train` - Use training split
